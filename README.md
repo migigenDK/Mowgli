@@ -1,7 +1,8 @@
 # Mowgli
 
-<p align="center"><img src="./images/gforce.jpg" width="75%"/></p>
+<p align="center"><img src="./images/redbackPCB" width="75%"/></p>
 <br>
+credit @lemontreee on Discord.
 <h2 id="">
   About *This is very much a work in progress
 </h2>
