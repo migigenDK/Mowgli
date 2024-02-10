@@ -3,14 +3,14 @@
 <p align="center"><img src="./images/gforce.jpg" width="75%"/></p>
 <br>
 <h2 id="">
-  About
+  About *This is very much a work in progress
 </h2>
 
-This repo is forked of https://github.com/cloudn1ne/Mowgli to folllow his great job. \
-It should work on the Yardforce Classic 500 and LUV1000RI \
+This repo is forked of https://github.com/cedbossneo/Mowgli --> https://github.com/cloudn1ne/Mowgli to folllow their great job. \
+The goal is for this to work on the Redback RM24/RM18 & Fuxtec equivalent. \
 *Please adjust the configuration in [board.h](./stm32/ros_usbnode/include/board.h)*
 
-The documentation on this fork is mostly not up to date - we will try to update it.
+
 
 The current way to build a mowgli mower is to flash [ros_usbnode](./stm32/ros_usbnode/) to the mainboard and use [mowgli-docker](https://github.com/cedbossneo/mowgli-docker).
 
@@ -48,6 +48,12 @@ The custom firmware has no protections - no tilt sensing, no stop buttons will w
 </h2>
 <br>
 
+<br>
+<h2 id="todo">
+  TODO
+</h2>
+<br>
+
 - [Basic overview of the mainboard](./Kicad), [Datasheets](./Datasheets) for ICs
 - Motor Drivers for both Drive Motors and Blade Motor can be controlled
 - Mainboard (GForce) Firmware [dump and restore](./stm32/mainboard_firmware) via an ST Link or other (e.g. JLink Segger) tools
@@ -61,13 +67,6 @@ The custom firmware has no protections - no tilt sensing, no stop buttons will w
 - onboard IMU (accelerometer) for tilt protection
 - Safety switches (Hall Sensors) for STOP button
 - Rain Sensor
-
-<br>
-<h2 id="todo">
-  TODO
-</h2>
-<br>
-
 Do the correct topics to remove the mowgli proxy in openmower ros and so be plug & play with openmower.
 
 <br>
