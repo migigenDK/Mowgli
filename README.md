@@ -1,6 +1,6 @@
 # Mowgli
 
-<p align="center"><img src="./images/redbackPCB" width="75%"/></p>
+<p align="center"><img src="./images/redbackPCB.jpg" width="75%"/></p>
 <br>
 credit @lemontreee on Discord.
 <h2 id="">
