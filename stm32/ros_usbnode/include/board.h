@@ -116,12 +116,12 @@ extern "C"
 #define BLADEMOTOR_USART_ENABLED 1
 #define PANEL_USART_ENABLED 1
 
-// our IMU hangs of a bigbanged I2C bus on J18
+// our IMU hangs of a bigbanged I2C bus on J18z - updated
 #define SOFT_I2C_ENABLED 1
 
-#define LED_PIN GPIO_PIN_2
-#define LED_GPIO_PORT GPIOB
-#define LED_GPIO_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE()
+#define LED_PIN GPIO_PIN_10
+#define LED_GPIO_PORT GPIOA
+#define LED_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 
 /* 24V Supply */
 #define TF4_PIN GPIO_PIN_5
@@ -156,12 +156,12 @@ extern "C"
 #define TILT_PORT GPIOA
 #define TILT_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 
-/* Wheel lift - (HIGH when set) */
-#define WHEEL_LIFT_BLUE_PIN GPIO_PIN_0
-#define WHEEL_LIFT_BLUE_PORT GPIOD
-#define WHEEL_LIFT_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
-#define WHEEL_LIFT_RED_PIN GPIO_PIN_1
-#define WHEEL_LIFT_RED_PORT GPIOD
+/* Wheel lift - (HIGH when set) - updated */
+#define WHEEL_LIFT_BLUE_PIN GPIO_PIN_3
+#define WHEEL_LIFT_BLUE_PORT GPIOA
+#define WHEEL_LIFT_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
+#define WHEEL_LIFT_RED_PIN GPIO_PIN_2
+#define WHEEL_LIFT_RED_PORT GPIOA
 
 /* Play button - (LOW when pressed) */
 #define PLAY_BUTTON_PIN GPIO_PIN_7
@@ -174,14 +174,14 @@ extern "C"
 #define HOME_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 
 
-/* Rain Sensor - (LOW when active) */
-#define RAIN_SENSOR_PIN GPIO_PIN_2
-#define RAIN_SENSOR_PORT GPIOE
-#define RAIN_SENSOR_GPIO_CLK_ENABLE() __HAL_RCC_GPIOE_CLK_ENABLE()
+/* Rain Sensor - (LOW when active) - updated */
+#define RAIN_SENSOR_PIN GPIO_PIN_1
+#define RAIN_SENSOR_PORT GPIOA
+#define RAIN_SENSOR_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 
-/* STOP HALL Sensor - (HIGH when set) */
+/* STOP HALL Sensor - (HIGH when set) - updated */
 #define HALLSTOP_RIGHT_PIN GPIO_PIN_2
-#define HALLSTOP_LEFT_PIN GPIO_PIN_3
+#define HALLSTOP_LEFT_PIN GPIO_PIN_7
 #define HALLSTOP_PORT GPIOD
 #define HALLSTOP_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
 
