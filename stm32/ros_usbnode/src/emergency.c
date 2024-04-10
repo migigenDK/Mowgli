@@ -12,6 +12,7 @@
   */
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <math.h>
 #include <string.h>
 #include "stm32f1xx_hal.h"
@@ -24,6 +25,10 @@
 
 //#define EMERGENCY_DEBUG 1
 
+#define EMERGENCY_CHECKING_DISABLE 2
+#define EMERGENCY_CHECKING_ENABLE 3
+
+static bool emergency_checking_disabled = false;
 static uint8_t emergency_state = 0;
 static uint32_t stop_emergency_started = 0;
 static uint32_t blue_wheel_lift_emergency_started = 0;
@@ -49,9 +54,17 @@ uint8_t Emergency_State(void)
  */
 void  Emergency_SetState(uint8_t new_emergency_state)
 {
-    emergency_state = new_emergency_state;
+    switch (new_emergency_state)  {
+        case EMERGENCY_CHECKING_DISABLE:
+            emergency_checking_disabled = true;
+            emergency_state = 0;
+            break;
+        case EMERGENCY_CHECKING_ENABLE:
+            emergency_checking_disabled = false;
+        default:
+            emergency_state = new_emergency_state;
+    }
 }
-
 
 /**
  * @brief Poll mechanical Tilt Sensor
@@ -133,7 +146,12 @@ void EmergencyController(void)
     debug_printf("  >> tilt: %d\r\n", Emergency_Tilt());
     debug_printf("  >> accelerometer_int_triggered: %d\r\n", Emergency_LowZAccelerometer());
     debug_printf("  >> play_button: %d\r\n",play_button);
-#endif    
+#endif
+
+    if (emergency_checking_disabled) {
+        emergency_state = 0;
+        return;
+    }
 
     if (stop_button_yellow || stop_button_white)
     {

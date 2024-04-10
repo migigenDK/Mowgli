@@ -75,6 +75,10 @@ extern "C"
     #define I_DONT_NEED_MY_FINGERS              1      // disables EmergencyController() (no wheel lift, or tilt sensing and stopping the blade anymore)
 {{end}}
 
+{{if .PerimeterWire }}
+    #define OPTION_PERIMETER
+{{end}}
+
 /// nominal max charge current is 1.0 Amp
 #define MAX_CHARGE_CURRENT {{ .MaxChargeCurrent | printf "%.2f" }}f
 /// limite voltag when switching in 150mA mode
