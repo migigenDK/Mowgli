@@ -156,7 +156,7 @@ extern "C"
 #define TILT_PORT GPIOA
 #define TILT_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 
-/* Wheel lift - (HIGH when set) - updated */
+/* Wheel lift - (HIGH when set) - updated for redback*/
 #define WHEEL_LIFT_BLUE_PIN GPIO_PIN_3
 #define WHEEL_LIFT_BLUE_PORT GPIOA
 #define WHEEL_LIFT_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
@@ -174,12 +174,12 @@ extern "C"
 #define HOME_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 
 
-/* Rain Sensor - (LOW when active) - updated */
+/* Rain Sensor - (LOW when active) - updated for redback*/
 #define RAIN_SENSOR_PIN GPIO_PIN_1
 #define RAIN_SENSOR_PORT GPIOA
 #define RAIN_SENSOR_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 
-/* STOP HALL Sensor - (HIGH when set) - updated */
+/* STOP HALL Sensor - (HIGH when set) - updated for redback*/
 #define HALLSTOP_RIGHT_PIN GPIO_PIN_2
 #define HALLSTOP_LEFT_PIN GPIO_PIN_7
 #define HALLSTOP_PORT GPIOD
@@ -255,10 +255,11 @@ extern "C"
 #endif
 
 // J18 has the SPI3 pins, as we dont use SPI3, we recycle them for I2C Bitbanging (for our Pololu ALtIMU-10v5)
+//Updated for redback mpu6050
 #ifdef SOFT_I2C_ENABLED
-#define SOFT_I2C_SCL_PIN GPIO_PIN_3
+#define SOFT_I2C_SCL_PIN GPIO_PIN_8
 #define SOFT_I2C_SCL_PORT GPIOB
-#define SOFT_I2C_SDA_PIN GPIO_PIN_4
+#define SOFT_I2C_SDA_PIN GPIO_PIN_9
 #define SOFT_I2C_SDA_PORT GPIOB
 
 #define SOFT_I2C_GPIO_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE();
