@@ -18,8 +18,9 @@ extern "C"
  * BOARD SELECTION
  * the specific board setting are set a the end of this file
  ********************************************************************************/
- #define BOARD_YARDFORCE500 1
+ //#define BOARD_YARDFORCE500 1
 //#define BOARD_LUV1000RI 1
+ #define BOARD_REDBACK24 1
 
 /* definition type don't modify */
 #define DEBUG_TYPE_NONE 0
@@ -34,6 +35,7 @@ extern "C"
 #define PANEL_TYPE_YARDFORCE_500_CLASSIC 1
 #define PANEL_TYPE_YARDFORCE_LUV1000RI 2
 #define PANEL_TYPE_YARDFORCE_900_ECO 3
+#define PANEL_TYPE_REDBACK_24_LCD 4
 
 #if defined(BOARD_YARDFORCE500)
 #define PANEL_TYPE PANEL_TYPE_YARDFORCE_500_CLASSIC
@@ -55,6 +57,20 @@ extern "C"
 
 #define OPTION_ULTRASONIC 1
 #define OPTION_BUMPER 0
+
+#define MAX_MPS 0.5		  // Allow maximum speed of 1.0 m/s
+#define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
+#define TICKS_PER_M 300.0 // Motor Encoder ticks per meter
+#define WHEEL_BASE 0.285   // The distance between the center of the wheels in meters
+
+#elif defined(BOARD_REDBACK24)
+#define PANEL_TYPE PANEL_TYPE_REDBACK_24_LCD
+#define BLADEMOTOR_LENGTH_RECEIVED_MSG 14
+
+#define DEBUG_TYPE 0
+
+#define OPTION_ULTRASONIC 0
+#define OPTION_BUMPER 1
 
 #define MAX_MPS 0.5		  // Allow maximum speed of 1.0 m/s
 #define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
