@@ -423,7 +423,7 @@ void HALLSTOP_Sensor_Init()
 int HALLSTOP_Left_Sense(void)
 {
 #if OPTION_BUMPER == 1
-  return (HAL_GPIO_ReadPin(HALLSTOP_PORT, GPIO_PIN_2));
+  return (HAL_GPIO_ReadPin(HALLBUMPER_PORT, HALLBUMPER_LEFT_PIN));
 #else
   return 0;
 #endif
@@ -436,7 +436,7 @@ int HALLSTOP_Left_Sense(void)
 int HALLSTOP_Right_Sense(void)
 {
 #if OPTION_BUMPER == 1
-  return (HAL_GPIO_ReadPin(HALLSTOP_PORT, GPIO_PIN_3));
+  return (HAL_GPIO_ReadPin(HALLBUMPER_PORT, HALLBUMPER_RIGHT_PIN));
 #else
   return 0;
 #endif

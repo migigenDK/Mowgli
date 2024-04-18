@@ -179,14 +179,14 @@ extern "C"
 #define WHEEL_LIFT_RED_PIN GPIO_PIN_2
 #define WHEEL_LIFT_RED_PORT GPIOA
 
-/* Play button - (LOW when pressed) */
-#define PLAY_BUTTON_PIN GPIO_PIN_7
+/* Play button - (LOW when pressed) - updated for redback*/
+#define PLAY_BUTTON_PIN GPIO_PIN_8
 #define PLAY_BUTTON_PORT GPIOC
 #define PLAY_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 
-/* Home button - (LOW when pressed) */
-#define HOME_BUTTON_PIN GPIO_PIN_13
-#define HOME_BUTTON_PORT GPIOB
+/* Home button - (LOW when pressed) - updated for redback*/
+#define HOME_BUTTON_PIN GPIO_PIN_7
+#define HOME_BUTTON_PORT GPIOC
 #define HOME_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 
 
@@ -200,6 +200,12 @@ extern "C"
 #define HALLSTOP_LEFT_PIN GPIO_PIN_7
 #define HALLSTOP_PORT GPIOD
 #define HALLSTOP_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
+
+/* Bumper Sensor - updated for redback*/
+#define HALLBUMPER_LEFT_PIN GPIO_PIN_4
+#define HALLBUMPER_RIGHT_PIN GPIO_PIN_5
+#define HALLBUMPER_PORT GPIOA
+#define HALLBUMPER_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 
     /* either J6 or J18 can be the master USART port */
 #ifdef MASTER_J6
