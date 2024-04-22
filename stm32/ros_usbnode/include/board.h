@@ -220,7 +220,7 @@ extern "C"
 #define MASTER_USART_IRQ USART1_IRQn
 #endif
 #ifdef MASTER_J18
-/* UART4 (J18 Pin 7 (TX) Pin 8 (RX)) */
+/* UART4 (J18 Pin 7 (TX) Pin 8 (RX)) (pd5 tx, pd6 rx redback)*/
 #define MASTER_USART_INSTANCE UART4
 #define MASTER_USART_RX_PIN GPIO_PIN_11
 #define MASTER_USART_RX_PORT GPIOC
