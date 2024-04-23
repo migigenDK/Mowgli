@@ -133,7 +133,7 @@ extern "C"
 #define PANEL_USART_ENABLED 1
 
 // our IMU hangs of a bigbanged I2C bus on J18z - updated
-#define SOFT_I2C_ENABLED 1
+#define SOFT_I2C_ENABLED 0
 
 #define LED_PIN GPIO_PIN_10
 #define LED_GPIO_PORT GPIOA
@@ -220,13 +220,13 @@ extern "C"
 #define MASTER_USART_IRQ USART1_IRQn
 #endif
 #ifdef MASTER_J18
-/* UART4 (J18 Pin 7 (TX) Pin 8 (RX)) (pd5 tx, pd6 rx redback)*/
+/* UART4 (J18 Pin 7 (TX) Pin 8 (RX)) (pd5 tx, pd6 rx redback P15 on pcb) - updated for redback*/
 #define MASTER_USART_INSTANCE UART4
-#define MASTER_USART_RX_PIN GPIO_PIN_11
-#define MASTER_USART_RX_PORT GPIOC
-#define MASTER_USART_TX_PIN GPIO_PIN_10
-#define MASTER_USART_TX_PORT GPIOC
-#define MASTER_USART_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
+#define MASTER_USART_RX_PIN GPIO_PIN_6
+#define MASTER_USART_RX_PORT GPIOD
+#define MASTER_USART_TX_PIN GPIO_PIN_5
+#define MASTER_USART_TX_PORT GPIOD
+#define MASTER_USART_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
 #define MASTER_USART_USART_CLK_ENABLE() __HAL_RCC_UART4_CLK_ENABLE()
 #define MASTER_USART_IRQ UART4_IRQn
 #endif
