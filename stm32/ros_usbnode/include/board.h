@@ -130,7 +130,7 @@ extern "C"
 // enable Drive and Blade Motor UARTS
 #define DRIVEMOTORS_USART_ENABLED 1
 #define BLADEMOTOR_USART_ENABLED 1
-#define PANEL_USART_ENABLED 1
+#define PANEL_USART_ENABLED 0    // testing redback
 
 // our IMU hangs of a bigbanged I2C bus on J18z - updated
 #define SOFT_I2C_ENABLED 0

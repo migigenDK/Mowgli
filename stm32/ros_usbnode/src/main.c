@@ -312,7 +312,7 @@ void MASTER_USART_Init()
   HAL_GPIO_Init(MASTER_USART_TX_PORT, &GPIO_InitStruct);
 
   MASTER_USART_Handler.Instance = MASTER_USART_INSTANCE;     // USART1 (DEV)
-  MASTER_USART_Handler.Init.BaudRate = 115200;               // Baud rate
+  MASTER_USART_Handler.Init.BaudRate = 115200;               // Baud rate  - ready for redback
   MASTER_USART_Handler.Init.WordLength = UART_WORDLENGTH_8B; // The word is  8  Bit format
   MASTER_USART_Handler.Init.StopBits = USART_STOPBITS_1;     // A stop bit
   MASTER_USART_Handler.Init.Parity = UART_PARITY_NONE;       // No parity bit
