@@ -13,7 +13,7 @@ The goal is for this to work on the Redback RM24/RM18 & Fuxtec equivalent. \
 
 
 
-The current way to build a mowgli mower is to flash [ros_usbnode](./stm32/ros_usbnode/) to the mainboard and use [mowgli-docker](https://github.com/cedbossneo/mowgli-docker).
+The current way to build a mowgli mower is to use [mowgli-docker](https://github.com/cedbossneo/mowgli-docker) and go to the Setup page in the GUI to flash your mainboard & gps (be sure your stlink is connected to your pi).
 
 <br>
 <br>

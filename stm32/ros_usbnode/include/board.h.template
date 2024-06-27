@@ -119,7 +119,7 @@ extern "C"
 {{end}}
 
 // Force disable IMU to be detected - CURRENTLY THIS SETTING DOES NOT WORK!
-//#define DISABLE_ALTIMU10v5
+//#define DISABLE_LSM6
 //#define DISABLE_MPU6050
 //#define DISABLE_WT901
 

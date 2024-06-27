@@ -14,6 +14,7 @@
 * Includes
 *******************************************************************************/
 #include "main.h"
+#include "board.h"
 #include "perimeter.h" 
 #include <math.h>
 #include <stdlib.h>
