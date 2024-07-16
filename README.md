@@ -4,7 +4,7 @@
 <br>
 credit @lemontreee on Discord.
 <h2 id="">
-  About *This is very much a work in progress
+  About *This is very much a work in progress. Do NOT flash to bot as is.
 </h2>
 
 This repo is forked of https://github.com/cedbossneo/Mowgli --> https://github.com/cloudn1ne/Mowgli to folllow their great job. \
