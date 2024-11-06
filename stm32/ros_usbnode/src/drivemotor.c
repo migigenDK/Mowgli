@@ -418,8 +418,16 @@ void DRIVEMOTOR_SetSpeed(uint8_t left_speed, uint8_t right_speed, uint8_t left_d
 {
     left_speed_req = left_speed;
     right_speed_req = right_speed;
-    left_dir_req = left_dir;
-    right_dir_req = right_dir;
+    if(left_speed_req == 0 && right_speed_req ==  0)
+    {
+        left_dir_req = 0;
+        right_dir_req = 0;
+    }
+    else
+    {
+        left_dir_req = left_dir;
+        right_dir_req = right_dir;
+    }
 }
 
 /// @brief drive motor receive interrupt handler

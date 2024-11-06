@@ -23,14 +23,18 @@ static const char PERIMETERCONTROLSRV[] = "mower_msgs/PerimeterControlSrv";
 
     virtual int serialize(unsigned char *outbuffer) const override
     {
-      *(outbuffer) = this->listenOn;
-      return sizeof(this->listenOn);
+      int offset = 0;
+      *(outbuffer + offset + 0) = (this->listenOn >> (8 * 0)) & 0xFF;
+      offset += sizeof(this->listenOn);
+      return offset;
     }
 
     virtual int deserialize(unsigned char *inbuffer) override
     {
-      this->listenOn =  ((uint8_t) (*(inbuffer)));
-     return 1;
+      int offset = 0;
+      this->listenOn =  ((uint8_t) (*(inbuffer + offset)));
+      offset += sizeof(this->listenOn);
+     return offset;
     }
 
     virtual const char * getType() override { return PERIMETERCONTROLSRV; };
@@ -48,12 +52,14 @@ static const char PERIMETERCONTROLSRV[] = "mower_msgs/PerimeterControlSrv";
 
     virtual int serialize(unsigned char *outbuffer) const override
     {
-      return 0;
+      int offset = 0;
+      return offset;
     }
 
     virtual int deserialize(unsigned char *inbuffer) override
     {
-     return 0;
+      int offset = 0;
+     return offset;
     }
 
     virtual const char * getType() override { return PERIMETERCONTROLSRV; };

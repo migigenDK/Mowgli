@@ -41,6 +41,8 @@ namespace mower_msgs
       _v_battery_type v_battery;
       typedef float _charge_current_type;
       _charge_current_type charge_current;
+      typedef bool _mow_enabled_type;
+      _mow_enabled_type mow_enabled;
       typedef mower_msgs::ESCStatus _left_esc_status_type;
       _left_esc_status_type left_esc_status;
       typedef mower_msgs::ESCStatus _right_esc_status_type;
@@ -65,6 +67,7 @@ namespace mower_msgs
       v_charge(0),
       v_battery(0),
       charge_current(0),
+      mow_enabled(0),
       left_esc_status(),
       right_esc_status(),
       mow_esc_status()
@@ -184,6 +187,13 @@ namespace mower_msgs
       *(outbuffer + offset + 2) = (u_charge_current.base >> (8 * 2)) & 0xFF;
       *(outbuffer + offset + 3) = (u_charge_current.base >> (8 * 3)) & 0xFF;
       offset += sizeof(this->charge_current);
+      union {
+        bool real;
+        uint8_t base;
+      } u_mow_enabled;
+      u_mow_enabled.real = this->mow_enabled;
+      *(outbuffer + offset + 0) = (u_mow_enabled.base >> (8 * 0)) & 0xFF;
+      offset += sizeof(this->mow_enabled);
       offset += this->left_esc_status.serialize(outbuffer + offset);
       offset += this->right_esc_status.serialize(outbuffer + offset);
       offset += this->mow_esc_status.serialize(outbuffer + offset);
@@ -315,6 +325,14 @@ namespace mower_msgs
       u_charge_current.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
       this->charge_current = u_charge_current.real;
       offset += sizeof(this->charge_current);
+      union {
+        bool real;
+        uint8_t base;
+      } u_mow_enabled;
+      u_mow_enabled.base = 0;
+      u_mow_enabled.base |= ((uint8_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      this->mow_enabled = u_mow_enabled.real;
+      offset += sizeof(this->mow_enabled);
       offset += this->left_esc_status.deserialize(inbuffer + offset);
       offset += this->right_esc_status.deserialize(inbuffer + offset);
       offset += this->mow_esc_status.deserialize(inbuffer + offset);
@@ -322,7 +340,7 @@ namespace mower_msgs
     }
 
     virtual const char * getType() override { return "mower_msgs/Status"; };
-    virtual const char * getMD5() override { return "33cd1b298baa54308c3c9343754a34fc"; };
+    virtual const char * getMD5() override { return "3878b70bc9c3008ce9c808b5392f58be"; };
 
   };
 

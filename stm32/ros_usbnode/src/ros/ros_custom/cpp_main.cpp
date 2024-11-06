@@ -80,7 +80,7 @@ uint8_t RxBuffer[RxBufferSize];
 struct ringbuffer rb;
 
 ros::Time last_cmd_vel(0, 0);
-uint32_t last_cmd_vel_age; // age of last velocity command
+double last_cmd_vel_age; // age of last velocity command
 
 // drive motor control
 static uint8_t left_speed = 0;
@@ -89,6 +89,7 @@ static uint8_t left_dir = 0;
 static uint8_t right_dir = 0;
 
 // blade motor control
+static uint8_t target_blade_on_off = 0;
 static uint8_t blade_on_off = 0;
 static uint8_t blade_direction = 0;
 
@@ -203,7 +204,7 @@ extern "C" void CommandHighLevelStatusMessageCb(const mower_msgs::HighLevelStatu
 	{
 		PANEL_Set_LED(PANEL_LED_LOCK, PANEL_LED_ON);
 	}
-	if (blade_on_off)
+	if (target_blade_on_off)
 	{
 		if (BLADEMOTOR_bActivated)
 		{
@@ -278,7 +279,7 @@ extern "C" void CommandHighLevelStatusMessageCb(const mower_msgs::HighLevelStatu
 		PANEL_Set_LED(PANEL_LED_8H, PANEL_LED_OFF);
 		main_eOpenmowerStatus = OPENMOWER_STATUS_IDLE;
 		left_dir = right_dir = 1;
-		left_speed = right_speed = blade_on_off = 0;
+		left_speed = right_speed = blade_on_off = target_blade_on_off = 0;
 		break;
 	}
 }
@@ -374,6 +375,7 @@ extern "C" void motors_handler()
 {
 	if (NBT_handler(&motors_nbt))
 	{
+		blade_on_off = target_blade_on_off;
 		if (Emergency_State())
 		{
 			DRIVEMOTOR_SetSpeed(0, 0, 0, 0);
@@ -382,8 +384,8 @@ extern "C" void motors_handler()
 		else
 		{
 			// if the last velocity cmd is older than 1sec we stop the drive motors
-			last_cmd_vel_age = nh.now().sec - last_cmd_vel.sec;
-			if (last_cmd_vel_age > 1)
+			last_cmd_vel_age = nh.now().toSec() - last_cmd_vel.toSec();
+			if (last_cmd_vel_age > 0.2)
 			{
 				DRIVEMOTOR_SetSpeed(0, 0, 0, 0);
 			}
@@ -591,13 +593,14 @@ extern "C" void broadcast_handler()
 		om_mower_status_msg.left_esc_status.current = left_power;
 		om_mower_status_msg.right_esc_status.current = right_power;
 		om_mower_status_msg.mow_esc_status.temperature_motor = blade_temperature;
-		om_mower_status_msg.mow_esc_status.tacho = BLADEMOTOR_u16RPM;
+		om_mower_status_msg.mow_esc_status.tacho =
+		om_mower_status_msg.mow_esc_status.rpm = BLADEMOTOR_u16RPM;
 		om_mower_status_msg.mow_esc_status.current = (float)BLADEMOTOR_u16Power / 1000.0;
 		om_mower_status_msg.mow_esc_status.temperature_pcb = BLADEMOTOR_u32Error;
 		om_mower_status_msg.mow_esc_status.status = mower_msgs::ESCStatus::ESC_STATUS_OK;
 		om_mower_status_msg.left_esc_status.status = mower_msgs::ESCStatus::ESC_STATUS_OK;
 		om_mower_status_msg.right_esc_status.status = mower_msgs::ESCStatus::ESC_STATUS_OK;
-
+		om_mower_status_msg.mow_enabled = target_blade_on_off;
 		pubOMStatus.publish(&om_mower_status_msg);
 
 	}
@@ -611,12 +614,12 @@ void cbEnableMowerMotor(const mower_msgs::MowerControlSrvRequest &req, mower_msg
 {
 	if (req.mow_enabled && !Emergency_State())
 	{
-		blade_on_off = 1;
+		target_blade_on_off = 1;
 		blade_direction = req.mow_direction;
 	}
 	else
 	{
-		blade_on_off = 0;
+		target_blade_on_off = 0;
 	}
 }
 

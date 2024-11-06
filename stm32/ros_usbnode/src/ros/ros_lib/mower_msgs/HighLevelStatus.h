@@ -18,6 +18,12 @@ namespace mower_msgs
       _state_name_type state_name;
       typedef const char* _sub_state_name_type;
       _sub_state_name_type sub_state_name;
+      typedef int16_t _current_area_type;
+      _current_area_type current_area;
+      typedef int16_t _current_path_type;
+      _current_path_type current_path;
+      typedef int16_t _current_path_index_type;
+      _current_path_index_type current_path_index;
       typedef float _gps_quality_percent_type;
       _gps_quality_percent_type gps_quality_percent;
       typedef float _battery_percent_type;
@@ -40,6 +46,9 @@ namespace mower_msgs
       state(0),
       state_name(""),
       sub_state_name(""),
+      current_area(0),
+      current_path(0),
+      current_path_index(0),
       gps_quality_percent(0),
       battery_percent(0),
       is_charging(0),
@@ -62,6 +71,30 @@ namespace mower_msgs
       offset += 4;
       memcpy(outbuffer + offset, this->sub_state_name, length_sub_state_name);
       offset += length_sub_state_name;
+      union {
+        int16_t real;
+        uint16_t base;
+      } u_current_area;
+      u_current_area.real = this->current_area;
+      *(outbuffer + offset + 0) = (u_current_area.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_current_area.base >> (8 * 1)) & 0xFF;
+      offset += sizeof(this->current_area);
+      union {
+        int16_t real;
+        uint16_t base;
+      } u_current_path;
+      u_current_path.real = this->current_path;
+      *(outbuffer + offset + 0) = (u_current_path.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_current_path.base >> (8 * 1)) & 0xFF;
+      offset += sizeof(this->current_path);
+      union {
+        int16_t real;
+        uint16_t base;
+      } u_current_path_index;
+      u_current_path_index.real = this->current_path_index;
+      *(outbuffer + offset + 0) = (u_current_path_index.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_current_path_index.base >> (8 * 1)) & 0xFF;
+      offset += sizeof(this->current_path_index);
       union {
         float real;
         uint32_t base;
@@ -123,6 +156,33 @@ namespace mower_msgs
       this->sub_state_name = (char *)(inbuffer + offset-1);
       offset += length_sub_state_name;
       union {
+        int16_t real;
+        uint16_t base;
+      } u_current_area;
+      u_current_area.base = 0;
+      u_current_area.base |= ((uint16_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_current_area.base |= ((uint16_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      this->current_area = u_current_area.real;
+      offset += sizeof(this->current_area);
+      union {
+        int16_t real;
+        uint16_t base;
+      } u_current_path;
+      u_current_path.base = 0;
+      u_current_path.base |= ((uint16_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_current_path.base |= ((uint16_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      this->current_path = u_current_path.real;
+      offset += sizeof(this->current_path);
+      union {
+        int16_t real;
+        uint16_t base;
+      } u_current_path_index;
+      u_current_path_index.base = 0;
+      u_current_path_index.base |= ((uint16_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_current_path_index.base |= ((uint16_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      this->current_path_index = u_current_path_index.real;
+      offset += sizeof(this->current_path_index);
+      union {
         float real;
         uint32_t base;
       } u_gps_quality_percent;
@@ -164,7 +224,7 @@ namespace mower_msgs
     }
 
     virtual const char * getType() override { return "mower_msgs/HighLevelStatus"; };
-    virtual const char * getMD5() override { return "db5c3531ba581d4c594cc4da6f89eb3f"; };
+    virtual const char * getMD5() override { return "732af7e69b02c69eb2276dbbe1ebc2aa"; };
 
   };
 
