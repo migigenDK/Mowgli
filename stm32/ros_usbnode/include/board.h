@@ -18,8 +18,9 @@ extern "C"
  * BOARD SELECTION
  * the specific board setting are set a the end of this file
  ********************************************************************************/
- #define BOARD_YARDFORCE500 1
+//#define BOARD_YARDFORCE500 1
 //#define BOARD_LUV1000RI 1
+ #define BOARD_RM24 1
 
 /* definition type don't modify */
 #define DEBUG_TYPE_NONE 0
@@ -34,6 +35,7 @@ extern "C"
 #define PANEL_TYPE_YARDFORCE_500_CLASSIC 1
 #define PANEL_TYPE_YARDFORCE_LUV1000RI 2
 #define PANEL_TYPE_YARDFORCE_900_ECO 3
+#define PANEL_TYPE_REDBACK_RM24 4
 
 #if defined(BOARD_YARDFORCE500)
 #define PANEL_TYPE PANEL_TYPE_YARDFORCE_500_CLASSIC
@@ -60,6 +62,19 @@ extern "C"
 #define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
 #define TICKS_PER_M 300.0 // Motor Encoder ticks per meter
 #define WHEEL_BASE 0.285   // The distance between the center of the wheels in meters
+
+#elif defined(BOARD_RM24)
+#define PANEL_TYPE PANEL_TYPE_NONE
+#define BLADEMOTOR_LENGTH_RECEIVED_MSG 16
+#define DEBUG_TYPE DEBUG_TYPE_UART
+
+// 50/1 gear reduction, 32 ticks per motor rotation, 50*32 = 1600, wheel - dia = 20cm, base = 38cm, circumference = 61cm, 1600/61*100 = 2623 ticks per meter
+
+#define MAX_MPS 0.5		  // Allow maximum speed of 1.0 m/s
+#define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
+#define TICKS_PER_M 2623.0 // Motor Encoder ticks per meter
+#define WHEEL_BASE  0.380		// The distance between the center of the wheels in meters
+
 
 #else
 
@@ -109,17 +124,23 @@ extern "C"
 //#define DISABLE_WT901
 
 // we use J18 (Red 9 pin connector as Master Serial Port)
-#define MASTER_J18 1
+//#define MASTER_J18 1
+// we use P15 4 exposed pins on pcb
+#define MASTER_P15 1
 
 // enable Drive and Blade Motor UARTS
-#define DRIVEMOTORS_USART_ENABLED 1
-#define BLADEMOTOR_USART_ENABLED 1
-#define PANEL_USART_ENABLED 1
+//#define DRIVEMOTORS_USART_ENABLED 1
+//#define BLADEMOTOR_USART_ENABLED 1
+//#define PANEL_USART_ENABLED 1
 
-// our IMU hangs of a bigbanged I2C bus on J18z - updated
-#define SOFT_I2C_ENABLED 1
-
-#define LED_PIN GPIO_PIN_10
+// our IMU hangs of a bigbanged I2C bus on J18
+//#define SOFT_I2C_ENABLED 1
+/*
+#define LED_PIN GPIO_PIN_2
+#define LED_GPIO_PORT GPIOB
+#define LED_GPIO_CLK_ENABLE() __HAL_RCC_GPIOB_CLK_ENABLE()
+*/
+#define LED_PIN GPIO_PIN_10   //updated with pinKeyLED
 #define LED_GPIO_PORT GPIOA
 #define LED_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 
@@ -156,6 +177,13 @@ extern "C"
 #define TILT_PORT GPIOA
 #define TILT_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 
+/* Wheel lift - (HIGH when set)
+#define WHEEL_LIFT_BLUE_PIN GPIO_PIN_0
+#define WHEEL_LIFT_BLUE_PORT GPIOD
+#define WHEEL_LIFT_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
+#define WHEEL_LIFT_RED_PIN GPIO_PIN_1
+#define WHEEL_LIFT_RED_PORT GPIOD
+*/
 /* Wheel lift - (HIGH when set) - updated */
 #define WHEEL_LIFT_BLUE_PIN GPIO_PIN_3
 #define WHEEL_LIFT_BLUE_PORT GPIOA
@@ -163,27 +191,53 @@ extern "C"
 #define WHEEL_LIFT_RED_PIN GPIO_PIN_2
 #define WHEEL_LIFT_RED_PORT GPIOA
 
-/* Play button - (LOW when pressed) */
+/* Play button - (LOW when pressed) 
 #define PLAY_BUTTON_PIN GPIO_PIN_7
 #define PLAY_BUTTON_PORT GPIOC
 #define PLAY_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
+*/
 
-/* Home button - (LOW when pressed) */
+/* Play button - (LOW when pressed) - updated pinKeyStart */
+#define PLAY_BUTTON_PIN GPIO_PIN_8
+#define PLAY_BUTTON_PORT GPIOC
+#define PLAY_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
+
+/* Home button - (LOW when pressed)
 #define HOME_BUTTON_PIN GPIO_PIN_13
 #define HOME_BUTTON_PORT GPIOB
 #define HOME_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
+*/
+
+/* Home button - (LOW when pressed) - updated pinKeyHome */
+#define HOME_BUTTON_PIN GPIO_PIN_7
+#define HOME_BUTTON_PORT GPIOC
+#define HOME_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 
 
-/* Rain Sensor - (LOW when active) - updated */
+/* Rain Sensor - (LOW when active)
+#define RAIN_SENSOR_PIN GPIO_PIN_2
+#define RAIN_SENSOR_PORT GPIOE
+#define RAIN_SENSOR_GPIO_CLK_ENABLE() __HAL_RCC_GPIOE_CLK_ENABLE()
+*/
+
+/* Rain Sensor - (LOW when active) - updated pinRain*/
 #define RAIN_SENSOR_PIN GPIO_PIN_1
 #define RAIN_SENSOR_PORT GPIOA
 #define RAIN_SENSOR_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 
-/* STOP HALL Sensor - (HIGH when set) - updated */
+/* STOP HALL Sensor - (HIGH when set)
+#define HALLSTOP_RIGHT_PIN GPIO_PIN_2
+#define HALLSTOP_LEFT_PIN GPIO_PIN_3
+#define HALLSTOP_PORT GPIOD
+#define HALLSTOP_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
+*/
+
+/* STOP HALL Sensor - (HIGH when set) - updated  pinStopButton */
 #define HALLSTOP_RIGHT_PIN GPIO_PIN_2
 #define HALLSTOP_LEFT_PIN GPIO_PIN_7
 #define HALLSTOP_PORT GPIOD
 #define HALLSTOP_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
+
 
     /* either J6 or J18 can be the master USART port */
 #ifdef MASTER_J6
@@ -207,6 +261,17 @@ extern "C"
 #define MASTER_USART_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
 #define MASTER_USART_USART_CLK_ENABLE() __HAL_RCC_UART4_CLK_ENABLE()
 #define MASTER_USART_IRQ UART4_IRQn
+#endif
+#ifdef MASTER_P15
+/* USART2 (P15 pin 2 (TX) Pin 3 (RX)) */
+#define MASTER_USART_INSTANCE UART4
+#define MASTER_USART_RX_PIN GPIO_PIN_6
+#define MASTER_USART_RX_PORT GPIOD
+#define MASTER_USART_TX_PIN GPIO_PIN_5
+#define MASTER_USART_TX_PORT GPIOD
+#define MASTER_USART_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
+#define MASTER_USART_USART_CLK_ENABLE() __HAL_RCC_USART2_CLK_ENABLE()
+#define MASTER_USART_IRQ USART2_IRQn
 #endif
 
 #ifdef DRIVEMOTORS_USART_ENABLED
