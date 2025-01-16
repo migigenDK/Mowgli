@@ -68,11 +68,11 @@ extern "C"
 #define BLADEMOTOR_LENGTH_RECEIVED_MSG 16
 #define DEBUG_TYPE DEBUG_TYPE_UART
 
-// 50/1 gear reduction, 32 ticks per motor rotation, 50*32 = 1600, wheel - dia = 20cm, base = 38cm, circumference = 61cm, 1600/61*100 = 2623 ticks per meter
+// 50/1 gear reduction, 304 ticks per wheel rotation, wheel - dia = 20cm, base = 38cm, circumference = 61cm, = 498 ticks per meter
 
 #define MAX_MPS 0.5		  // Allow maximum speed of 1.0 m/s
 #define PWM_PER_MPS 300.0 // PWM value of 300 means 1 m/s bot speed so we divide by 4 to have correct robot speed but still progressive speed
-#define TICKS_PER_M 2623.0 // Motor Encoder ticks per meter
+#define TICKS_PER_M 498.0 // Motor Encoder ticks per meter
 #define WHEEL_BASE  0.380		// The distance between the center of the wheels in meters
 
 
