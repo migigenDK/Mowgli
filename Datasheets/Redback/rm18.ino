@@ -1,5 +1,7 @@
 /*
-  RM24A/18 robot mower  
+  Alfred MCU firmware (for RM24A/18 robot mower)
+  provides Sunray-compatible robot driver (serial robot driver)
+  NOTE: For compiling this file on the Alfred, see README (https://github.com/Ardumower/Sunray/blob/master/alfred/README.md)
   
   * MCU1 (main): STM32F103VET 512K flash/64K SRAM
         flash size       0x80000 
@@ -29,7 +31,7 @@
     2 RX                            TX1
     3 GND                           GND
     4 5V                            5V
-
+    
   --------------NOT USED---------------------
   J1: perimeter,  J2: main unit 
 
@@ -37,8 +39,8 @@
     16 J1_SWDIO                15 J1_NRST
     14 J1_SWCLK                13 J1_3.3V
     12 J2_SWRST                11 PD10/safekey
-    10 PC7/home                9 PC8/start      * edit note, pin 9 & 7 location are swapped 
-    8  PC9/area3/softRx        7 PA8/area2      *
+    10 PC7/home                9 PC8/start
+    8  PC9/area3/softRx        7 PA8/area2
     6  PA9/area1/tx1/softTx    5 PA11/led_status
     4  J2_SWDIO                3 J2_SWCLK
     2  GND                     1 J2_3.3V
@@ -48,7 +50,7 @@
     GND  U   v   W
 
 
-  steps:
+  steps for compiling on a PC:
   
   1. install Arduino STM32 board libraries ('STMicroelectronics 1.9.0'):   https://github.com/stm32duino/Arduino_Core_STM32
      https://idyl.io/arduino/how-to/program-stm32-blue-pill-stm32f103c8t6/
@@ -59,10 +61,19 @@
     c) flash this file ('rm18.ino') to bottom MCU J1 via ST-Link (SWD protocol)
      st-link v2 tool: https://github.com/rogerclarkmelbourne/Arduino_STM32/tree/master/tools/win/stlink
   
+  3. flash sunray.ino with these chassis settings:    
+    #define DRV_SERIAL_ROBOT  1
+    #define MPU6050
+    #define TICKS_PER_REVOLUTION  304  
+    #define WHEEL_BASE_CM         39         // wheel-to-wheel distance (cm), 36        
+    #define WHEEL_DIAMETER        205        // wheel diameter (mm), 250                 
+    #define MOTOR_PID_KP     1.0    // AM 2.0
+    #define MOTOR_PID_KI     0.0    // AM 0.03
+    #define MOTOR_PID_KD     0.0    // AM 0.03
+
 
   protocol examples:
     request protocol version:  AT+V,0x16
-    steer motors:  AT+M,20,20,1
 
 */
 
@@ -72,7 +83,7 @@
 
 //#define DEBUG 1
 
-#define VER "RM18,1.1.15"
+#define VER "RM18,1.1.16"
 
 #define pinSwdCLK          PA14
 #define pinSwdSDA          PA13
@@ -425,9 +436,9 @@ void readSensors(){
 
   // rain (lift low-pass filtering)  
   rain = analogRead(pinRain);  
-  w = 0.5;
+  w = 0.99;
   rainLP = w * rainLP + (1.0-w) * ((float)rain);
-  raining = (rainLP > 10);
+  raining = (rainLP > 50);
 
   // lift
   liftRight = analogRead(pinLift1);
