@@ -48,7 +48,7 @@ uint16_t chargecontrol_pwm_val      = 0;
 uint8_t  chargecontrol_is_charging  = 0;
 
 static CHARGER_STATE_e charger_state = CHARGER_STATE_IDLE;
-static float charge_end_voltage=BAT_CHARGE_DEFAULT_CUTOFF_VOLTAGE;
+static float charge_end_voltage=BAT_CHARGE_CUTOFF_VOLTAGE ;
 
 /******************************************************************************
  * Function Prototypes
