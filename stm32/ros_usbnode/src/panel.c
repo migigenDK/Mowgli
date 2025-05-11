@@ -96,7 +96,7 @@ void PANEL_Init(void)
 
     // RX
     GPIO_InitStruct.Pin = PANEL_USART_RX_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 #if BOARD_YARDFORCE500_VARIANT_B
