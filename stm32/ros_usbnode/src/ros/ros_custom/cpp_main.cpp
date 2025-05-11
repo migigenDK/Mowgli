@@ -585,13 +585,23 @@ extern "C" void broadcast_handler()
 
 		om_mower_status_msg.stamp = nh.now();
 		om_mower_status_msg.mower_status = mower_msgs::Status::MOWER_STATUS_OK;
+		om_mower_status_msg.raspberry_pi_power = true;
+		om_mower_status_msg.gps_power = true;
+		om_mower_status_msg.esc_power = true;
+
 		om_mower_status_msg.rain_detected = RAIN_Sense();
 		om_mower_status_msg.emergency = Emergency_State();
 		om_mower_status_msg.v_charge = chargerInputVoltage;
 		om_mower_status_msg.charge_current = current;
 		om_mower_status_msg.v_battery = battery_voltage;
-		om_mower_status_msg.left_esc_status.current = left_power;
-		om_mower_status_msg.right_esc_status.current = right_power;
+		om_mower_status_msg.left_esc_status.current = (float)left_power/100;
+		om_mower_status_msg.left_esc_status.tacho =
+		om_mower_status_msg.left_esc_status.rpm = left_wheel_speed_val;
+
+		om_mower_status_msg.right_esc_status.current = (float)right_power/100;
+		om_mower_status_msg.right_esc_status.tacho =
+		om_mower_status_msg.right_esc_status.rpm = right_wheel_speed_val;
+
 		om_mower_status_msg.mow_esc_status.temperature_motor = blade_temperature;
 		om_mower_status_msg.mow_esc_status.tacho =
 		om_mower_status_msg.mow_esc_status.rpm = BLADEMOTOR_u16RPM;
