@@ -96,7 +96,7 @@ void PANEL_Init(void)
 
     // RX
     GPIO_InitStruct.Pin = PANEL_USART_RX_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 #if BOARD_YARDFORCE500_VARIANT_B
@@ -299,7 +299,7 @@ void PANEL_Tick(void)
 void PANEL_SendLEDMessage(void){
     uint8_t ptr = 0;
     uint8_t ptr_beginScndMsg = 0;
-    uint8_t crc = 0;
+//    uint8_t crc = 0;
 
     while( __HAL_UART_GET_FLAG(&PANEL_USART_Handler, USART_FLAG_TC) != 1);
 
