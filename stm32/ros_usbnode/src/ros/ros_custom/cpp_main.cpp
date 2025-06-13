@@ -19,6 +19,7 @@
 
 #include <cpp_main.h>
 #include "panel.h"
+#include "charger.h"
 #include "emergency.h"
 #include "drivemotor.h"
 #include "blademotor.h"
@@ -64,6 +65,7 @@
 #include "mower_msgs/EmergencyStopSrv.h"
 #include "mower_msgs/HighLevelControlSrv.h"
 #include "mower_msgs/HighLevelStatus.h"
+#include "mower_msgs/ChargeCtrlSrv.h"
 
 #ifdef OPTION_PERIMETER
 	#include "perimeter.h"
@@ -162,6 +164,7 @@ void cbGetCfg(const mowgli::GetCfgRequest &req, mowgli::GetCfgResponse &res);
 void cbEnableMowerMotor(const mower_msgs::MowerControlSrvRequest &req, mower_msgs::MowerControlSrvResponse &res);
 void cbSetEmergency(const mower_msgs::EmergencyStopSrvRequest &req, mower_msgs::EmergencyStopSrvResponse &res);
 void cbReboot(const std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
+void cbChargeCtrl(const mower_msgs::ChargeCtrlSrvRequest &req, mower_msgs::ChargeCtrlSrvResponse &res);
 
 // ros::ServiceServer<mowgli::SetCfgRequest, mowgli::SetCfgResponse> svcSetCfg("mowgli/SetCfg", cbSetCfg);
 // ros::ServiceServer<mowgli::GetCfgRequest, mowgli::GetCfgResponse> svcGetCfg("mowgli/GetCfg", cbGetCfg);
@@ -169,6 +172,7 @@ ros::ServiceServer<mower_msgs::MowerControlSrvRequest, mower_msgs::MowerControlS
 ros::ServiceServer<mower_msgs::EmergencyStopSrvRequest, mower_msgs::EmergencyStopSrvResponse> svcSetEmergency("mower_service/emergency", cbSetEmergency);
 ros::ServiceClient<mower_msgs::HighLevelControlSrvRequest, mower_msgs::HighLevelControlSrvResponse> svcHighLevelControl("mower_service/high_level_control");
 ros::ServiceServer<std_srvs::Empty::Request, std_srvs::Empty::Response> svcReboot("mowgli/Reboot", cbReboot);
+ros::ServiceServer<mower_msgs::ChargeCtrlSrvRequest, mower_msgs::ChargeCtrlSrvResponse> svcChargeCtrl("mowgli/ChargeCtrl", cbChargeCtrl);
 
 #ifdef OPTION_PERIMETER
 // om perimeter signal
@@ -593,7 +597,8 @@ extern "C" void broadcast_handler()
 		om_mower_status_msg.left_esc_status.current = left_power;
 		om_mower_status_msg.right_esc_status.current = right_power;
 		om_mower_status_msg.mow_esc_status.temperature_motor = blade_temperature;
-		om_mower_status_msg.mow_esc_status.tacho = BLADEMOTOR_u16RPM;
+		om_mower_status_msg.mow_esc_status.tacho =
+		om_mower_status_msg.mow_esc_status.rpm = BLADEMOTOR_u16RPM;
 		om_mower_status_msg.mow_esc_status.current = (float)BLADEMOTOR_u16Power / 1000.0;
 		om_mower_status_msg.mow_esc_status.temperature_pcb = BLADEMOTOR_u32Error;
 		om_mower_status_msg.mow_esc_status.status = mower_msgs::ESCStatus::ESC_STATUS_OK;
@@ -643,6 +648,14 @@ void cbReboot(const std_srvs::Empty::Request &req, std_srvs::Empty::Response &re
 {
 	// debug_printf("cbReboot:\r\n");
 	reboot_flag = true;
+}
+
+/*
+ *  callback for mowgli/ChargeCtrl Service
+ */
+void cbChargeCtrl(const mower_msgs::ChargeCtrlSrvRequest &req, mower_msgs::ChargeCtrlSrvResponse &res)
+{
+	charger_set_end_voltage(req.eoc);
 }
 
 /*
@@ -715,6 +728,7 @@ extern "C" void init_ROS()
 	nh.advertiseService(svcEnableMowerMotor);
 	nh.advertiseService(svcSetEmergency);
 	nh.advertiseService(svcReboot);
+	nh.advertiseService(svcChargeCtrl);
 	nh.serviceClient(svcHighLevelControl);
 
 #ifdef OPTION_PERIMETER
