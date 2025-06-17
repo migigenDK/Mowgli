@@ -143,14 +143,30 @@ void DRIVEMOTOR_Init(void)
     DRIVEMOTORS_USART_GPIO_CLK_ENABLE();
     DRIVEMOTORS_USART_USART_CLK_ENABLE();
 
+#if BOARD_YARDFORCE500_VARIANT_ORIG
+    // RX
+    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_RX_PIN;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+    HAL_GPIO_Init(DRIVEMOTORS_USART_RX_PORT, &GPIO_InitStruct);
+
+    // TX
+    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_TX_PIN;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    // GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+    HAL_GPIO_Init(DRIVEMOTORS_USART_TX_PORT, &GPIO_InitStruct);
+
+    // Alternate Pin Set ?
+    __HAL_AFIO_REMAP_USART2_ENABLE();
+#elif BOARD_YARDFORCE500_VARIANT_B
     // RX
     GPIO_InitStruct.Pin = DRIVEMOTORS_USART_TX_PIN|DRIVEMOTORS_USART_RX_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-#if BOARD_YARDFORCE500_VARIANT_B
     GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
-#endif
     HAL_GPIO_Init(DRIVEMOTORS_USART_RX_PORT, &GPIO_InitStruct);
 
     // TX
@@ -158,15 +174,8 @@ void DRIVEMOTOR_Init(void)
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     // GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-#if BOARD_YARDFORCE500_VARIANT_B
     GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
-#endif
     HAL_GPIO_Init(DRIVEMOTORS_USART_TX_PORT, &GPIO_InitStruct);
-
-    // Alternate Pin Set ?
-#if BOARD_YARDFORCE500_VARIANT_ORIG
-	// TODO: This function does not exist on the STM32f4, simply not needed?
-    __HAL_AFIO_REMAP_USART2_ENABLE();
 #endif
 
     DRIVEMOTORS_USART_Handler.Instance = DRIVEMOTORS_USART_INSTANCE; // USART2
