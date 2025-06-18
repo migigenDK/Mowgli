@@ -111,24 +111,32 @@ void BLADEMOTOR_Init(void)
 	__HAL_RCC_USART6_CLK_ENABLE();
 #endif
     
+#if BOARD_YARDFORCE500_VARIANT_ORIG
     // RX
-    GPIO_InitStruct.Pin = BLADEMOTOR_USART_TX_PIN|BLADEMOTOR_USART_RX_PIN;
+    GPIO_InitStruct.Pin = BLADEMOTOR_USART_RX_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-#if BOARD_YARDFORCE500_VARIANT_B
-    GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
-#endif
     HAL_GPIO_Init(BLADEMOTOR_USART_RX_PORT, &GPIO_InitStruct);
 
     // TX
     GPIO_InitStruct.Pin = BLADEMOTOR_USART_TX_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-#if BOARD_YARDFORCE500_VARIANT_B
+    HAL_GPIO_Init(BLADEMOTOR_USART_TX_PORT, &GPIO_InitStruct);
+
+    // Alternate Pin Set ?
+    __HAL_AFIO_REMAP_USART2_ENABLE();
+#elif BOARD_YARDFORCE500_VARIANT_B
+    // RX TX
+    GPIO_InitStruct.Pin = BLADEMOTOR_USART_TX_PIN | BLADEMOTOR_USART_RX_PIN;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
+    HAL_GPIO_Init(DRIVEMOTORS_USART_TX_PORT, &GPIO_InitStruct);
 #endif
-    HAL_GPIO_Init(BLADEMOTOR_USART_TX_PORT, &GPIO_InitStruct);    
 
     BLADEMOTOR_USART_Handler.Instance = BLADEMOTOR_USART_INSTANCE;
     BLADEMOTOR_USART_Handler.Init.BaudRate = 115200;               // Baud rate
