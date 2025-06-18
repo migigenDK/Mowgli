@@ -53,6 +53,7 @@ extern ADC_HandleTypeDef ADC_Handle;
 /******************************************************************************
 * PUBLIC Function Prototypes
 *******************************************************************************/
+void Perimeter_vInit(void);
 void Perimeter_vApp(void);
 void PERIMETER_vITHandle(void);
 
