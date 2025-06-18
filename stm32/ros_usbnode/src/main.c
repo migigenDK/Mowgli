@@ -84,8 +84,11 @@ IWDG_HandleTypeDef IwdgHandle = {0};
 WWDG_HandleTypeDef WwdgHandle = {0};
 
 #if DB_ACTIVE
-int debug_assert(int condition,const char* msg) {
-  if (condition) return 0;
+int debug_assert(int condition, const char *msg)
+{
+  if (condition){
+    return 0;
+  }
   debug_printf(msg);
   return 1;
 }
@@ -93,8 +96,9 @@ int debug_assert(int condition,const char* msg) {
 
 int main(void)
 {
-  HAL_Init();
+
   SystemClock_Config();
+  HAL_Init();
 
 #if BOARD_YARDFORCE500_VARIANT_ORIG
   __HAL_RCC_AFIO_CLK_ENABLE();
@@ -103,7 +107,7 @@ int main(void)
 
   MX_DMA_Init();
 
-#if BOARD_YARDFORCE500_VARIANT_ORIG
+#if BOARD_HAS_MASTER_USART
   // Init debug USART
   MASTER_USART_Init();
 #endif
@@ -121,9 +125,9 @@ int main(void)
   DB_TRACE(" * LED initialized\r\n");
   TIM2_Init();
   ADC_Charging_Init();
-  #ifdef OPTION_PERIMETER
+#ifdef OPTION_PERIMETER
   Perimeter_vInit();
-  #endif
+#endif
   DB_TRACE(" * Charging ADC initialized\r\n");
   TIM3_Init();
   HAL_TIM_PWM_Start(&TIM3_Handle, TIM_CHANNEL_4);
@@ -136,7 +140,7 @@ int main(void)
   DB_TRACE(" * RAIN Sensor enabled\r\n");
   HALLSTOP_Sensor_Init();
   DB_TRACE(" * HALL Sensor enabled\r\n");
-    
+
   I2C_Init();
   DB_TRACE(" * Hard I2C initialized\r\n");
   if (I2C_Acclerometer_TestDevice())
@@ -148,22 +152,21 @@ int main(void)
     chirp(3);
     DB_TRACE("\e[01;31m * WARNING: initalization of onboard accelerometer for tilt protection failed !\e[0m\r\n");
   }
+
   DB_TRACE(" * Accelerometer (onboard/tilt safety) initialized\r\n");
   SW_I2C_Init();
   DB_TRACE(" * Soft I2C (J18) initialized\r\n");
   DB_TRACE(" * Testing supported IMUs:\r\n");
   IMU_Init();
   IMU_CalibrateExternal();
-  PANEL_Init();
-  DB_TRACE(" * Panel initialized\r\n");
   Emergency_Init();
   DB_TRACE(" * Emergency sensors initialized\r\n");
   TIM1_Init();
   DB_TRACE(" * Timer1 (Charge PWM) initialized\r\n");
   MX_USB_DEVICE_Init();
   DB_TRACE(" * USB CDC initialized\r\n");
-
-
+  PANEL_Init();
+  DB_TRACE(" * Panel initialized\r\n");
 // Init Drive Motors and Blade Motor
 #ifdef DRIVEMOTORS_USART_ENABLED
   DRIVEMOTOR_Init();
@@ -208,7 +211,7 @@ int main(void)
   chirp(2);
 
   WATCHDOG_vInit();
-  
+
   while (1)
   {
     chatter_handler();
@@ -218,9 +221,9 @@ int main(void)
     broadcast_handler();
 
     DRIVEMOTOR_App_Rx();
-    #ifdef OPTION_PERIMETER
+#ifdef OPTION_PERIMETER
     Perimeter_vApp();
-    #endif
+#endif
 
     if (NBT_handler(&main_chargecontroller_nbt))
     {
@@ -264,7 +267,7 @@ int main(void)
       {
         uint32_t currentTick;
         static uint32_t old_tick;
-        DB_TRACE(" temp : %.2f \n",blade_temperature);
+        DB_TRACE(" temp : %.2f \n", blade_temperature);
         currentTick = HAL_GetTick();
         DB_TRACE(" Current ticktime: %d    \r", (currentTick - old_tick));
         old_tick = currentTick;
@@ -301,7 +304,7 @@ int main(void)
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
-#if BOARD_YARDFORCE500_VARIANT_ORIG
+#if BOARD_HAS_MASTER_USART
 // The STM32f1 has enough USARTs to use one for debugging
 
 /**
@@ -511,8 +514,8 @@ void SystemClock_Config(void)
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
 #endif
   /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+   * in the RCC_OscInitTypeDef structure.
+   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
 #if BOARD_YARDFORCE500_VARIANT_ORIG
@@ -526,10 +529,10 @@ void SystemClock_Config(void)
 #if BOARD_YARDFORCE500_VARIANT_ORIG
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
 #elif BOARD_YARDFORCE500_VARIANT_B
-	RCC_OscInitStruct.PLL.PLLM = 4;
-	RCC_OscInitStruct.PLL.PLLN = 144;
-	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
-	RCC_OscInitStruct.PLL.PLLQ = 6;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 144;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLQ = 6;
 #endif
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -537,9 +540,8 @@ void SystemClock_Config(void)
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+   */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
@@ -757,6 +759,14 @@ void MX_DMA_Init(void)
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 #elif BOARD_YARDFORCE500_VARIANT_B
   /* DMA interrupt init */
+
+  /* DMA2_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream5_IRQn);
+  /* DMA2_Stream7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
+
   /* DMA1_Stream5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
@@ -769,6 +779,7 @@ void MX_DMA_Init(void)
   /* DMA2_Stream6_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
+
 #endif
 }
 
@@ -883,7 +894,7 @@ void vprint(const char *fmt, va_list argp)
     }
 #elif DEBUG_TYPE == DEBUG_TYPE_UART
 #if BOARD_YARDFORCE500_VARIANT_ORIG
-	  MASTER_Transmit((unsigned char *)string, strlen(string));
+    MASTER_Transmit((unsigned char *)string, strlen(string));
 #else
 #error "This board does not suport debugging via UART"
 #endif
@@ -902,7 +913,7 @@ void debug_printf(const char *fmt, ...)
   va_end(argp);
 }
 
-#if BOARD_YARDFORCE500_VARIANT_ORIG
+#if BOARD_HAS_MASTER_USART
 /*
  * Send message via MASTER USART (DMA Normal Mode)
  */
@@ -1029,7 +1040,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     ULTRASONICSENSOR_ReceiveIT();
 #endif
   }
-  else 
+  else
 #endif
   if (huart->Instance == BLADEMOTOR_USART_INSTANCE)
   {
