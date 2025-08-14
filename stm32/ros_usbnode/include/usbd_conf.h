@@ -31,8 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "main.h"
-#include "stm32f1xx.h"
-#include "stm32f1xx_hal.h"
+#include "stm32f_board_hal.h"
 
 /* USER CODE BEGIN INCLUDE */
 
@@ -96,10 +95,10 @@
 #define USBD_free           USBD_static_free
 
 /** Alias for memory set. */
-#define USBD_memset         /* Not used */
+#define USBD_memset memset        /* Not used */
 
 /** Alias for memory copy. */
-#define USBD_memcpy         /* Not used */
+#define USBD_memcpy memcpy        /* Not used */
 
 /** Alias for delay. */
 #define USBD_Delay          HAL_Delay

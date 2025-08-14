@@ -15,8 +15,8 @@
  *******************************************************************************/
 #include <string.h>
 #include <stdlib.h>
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_uart.h"
+
+#include "stm32f_board_hal.h"
 
 #include "main.h"
 #include "ros/ros_custom/cpp_main.h"
@@ -143,9 +143,10 @@ void DRIVEMOTOR_Init(void)
     DRIVEMOTORS_USART_GPIO_CLK_ENABLE();
     DRIVEMOTORS_USART_USART_CLK_ENABLE();
 
+#if BOARD_YARDFORCE500_VARIANT_ORIG
     // RX
     GPIO_InitStruct.Pin = DRIVEMOTORS_USART_RX_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_INPUT;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
     HAL_GPIO_Init(DRIVEMOTORS_USART_RX_PORT, &GPIO_InitStruct);
@@ -153,12 +154,21 @@ void DRIVEMOTOR_Init(void)
     // TX
     GPIO_InitStruct.Pin = DRIVEMOTORS_USART_TX_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    // GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
     HAL_GPIO_Init(DRIVEMOTORS_USART_TX_PORT, &GPIO_InitStruct);
 
     // Alternate Pin Set ?
     __HAL_AFIO_REMAP_USART2_ENABLE();
+#elif BOARD_YARDFORCE500_VARIANT_B
+    // RX TX
+    GPIO_InitStruct.Pin = DRIVEMOTORS_USART_TX_PIN | DRIVEMOTORS_USART_RX_PIN;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+    HAL_GPIO_Init(DRIVEMOTORS_USART_TX_PORT, &GPIO_InitStruct);
+#endif
 
     DRIVEMOTORS_USART_Handler.Instance = DRIVEMOTORS_USART_INSTANCE; // USART2
     DRIVEMOTORS_USART_Handler.Init.BaudRate = 115200;                // Baud rate
@@ -172,7 +182,13 @@ void DRIVEMOTOR_Init(void)
 
     /* USART2 DMA Init */
     /* USART2_RX Init */
+#if BOARD_YARDFORCE500_VARIANT_ORIG
     hdma_usart2_rx.Instance = DMA1_Channel6;
+#elif BOARD_YARDFORCE500_VARIANT_B
+	hdma_usart2_rx.Instance = DMA1_Stream5;
+	hdma_usart2_rx.Init.Channel = DMA_CHANNEL_4;
+	hdma_usart2_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+#endif
     hdma_usart2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_usart2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_usart2_rx.Init.MemInc = DMA_MINC_ENABLE;
@@ -188,7 +204,13 @@ void DRIVEMOTOR_Init(void)
     __HAL_LINKDMA(&DRIVEMOTORS_USART_Handler, hdmarx, hdma_usart2_rx);
 
     // USART2_TX Init */
-    hdma_usart2_tx.Instance = DMA1_Channel7;
+#if BOARD_YARDFORCE500_VARIANT_ORIG
+	hdma_usart2_tx.Instance = DMA1_Channel7;
+#elif BOARD_YARDFORCE500_VARIANT_B
+	hdma_usart2_tx.Instance = DMA1_Stream6;
+	hdma_usart2_tx.Init.Channel = DMA_CHANNEL_4;
+	hdma_usart2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+#endif
     hdma_usart2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_usart2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
     hdma_usart2_tx.Init.MemInc = DMA_MINC_ENABLE;
